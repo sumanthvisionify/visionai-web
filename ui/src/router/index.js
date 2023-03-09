@@ -203,7 +203,7 @@ export const routes = [
   },
   {
     path: '/scenario',
-    name: 'Scenario',
+    name: 'Scenarios',
     meta: {
       auth: {
         requiresAuth: true,

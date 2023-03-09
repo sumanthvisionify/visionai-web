@@ -2,8 +2,8 @@
   <div v-if="loading" class="d-flex tw-justify-center tw-items-center page-loading">
     <v-progress-circular indeterminate="indeterminate" color="var(--cui-primary)"></v-progress-circular>
   </div>
-  <div v-else class="tw-my-2 tw-mx-4">
-    <div class="d-flex tw-gap-5">
+  <div v-else>
+    <div class="d-flex tw-gap-5 tw-px-4 top-category-fixed">
       <div class="d-flex tw-items-center">
         <div class="page-title">{{ $route.name }}</div>
       </div>
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="tw-mt-2">
+    <div class="tw-my-2 tw-mx-4 tw-mt-10 scenario-section">
       <div v-for="item in scenarios" :key="item.id" class="tw-my-10">
         <div class="d-flex tw-justify-between tw-mx-2" :id="item.category">
           <div>
@@ -137,6 +137,19 @@ export default {
 </script>
 
 <style scoped>
+.scenario-section {
+  position: relative;
+  top: 6rem;
+}
+
+.top-category-fixed {
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  background: rgba(var(--cui-bg-app-bar-rgb)) !important;
+  box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 15%), 0px 3px 4px 0px rgb(0 0 0 / 1%), 0px 1px 8px 0px rgb(0 0 0 / 1%) !important;
+}
+
 .category_section {
   display: flex;
   flex-wrap: wrap;
