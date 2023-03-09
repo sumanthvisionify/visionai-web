@@ -202,6 +202,48 @@ export const routes = [
     component: () => import(/* webpackChunkName: "camview" */ '@/views/Camview/Camview.vue'),
   },
   {
+    path: '/scenario',
+    name: 'Scenario',
+    meta: {
+      auth: {
+        requiresAuth: true,
+        requiredLevel: [/*"cameras:access", */ 'scenario:access'],
+      },
+      config: {
+        fixedNavbar: true,
+        showFooter: true,
+        showNavbar: true,
+        showSidebar: true,
+      },
+      navigation: {
+        main: true,
+        icon: 'mdi-view-dashboard',
+      },
+    },
+    component: () => import(/* webpackChunkName: "camview" */ '@/views/Scenario/Scenario.vue'),
+  },
+  {
+    path: '/scenarioDetail/:id',
+    name: 'ScenarioDetail',
+    meta: {
+      auth: {
+        requiresAuth: true,
+        requiredLevel: [/*"cameras:access", */ 'scenario:access'],
+      },
+      config: {
+        fixedNavbar: true,
+        showFooter: true,
+        showNavbar: true,
+        showSidebar: true,
+      },
+      navigation: {
+        main: false,
+        icon: 'mdi-view-dashboard',
+      },
+    },
+    component: () => import(/* webpackChunkName: "camview" */ '@/views/Scenario/ScenarioDetail.vue'),
+  },
+  {
     path: '/console',
     name: 'Console',
     meta: {
