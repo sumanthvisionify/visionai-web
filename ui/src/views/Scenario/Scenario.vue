@@ -3,13 +3,14 @@
     <v-progress-circular indeterminate="indeterminate" color="var(--cui-primary)"></v-progress-circular>
   </div>
   <div v-else>
-    <div class="d-flex tw-gap-5 tw-px-4 top-category-fixed">
-      <div class="d-flex tw-items-center">
+    <div class="sm:tw-block md:tw-block lg:tw-flex tw-gap-5 tw-px-4 tw-items-center top-category-fixed">
+      <div class="sm:tw-mx-2">
         <div class="page-title">{{ $route.name }}</div>
       </div>
 
       <div class="category_section">
         <div class="category_section-item">
+          <v-btn class="main_cat_btn" @click="allCategory()">All</v-btn>
           <v-btn v-for="item in categories" :key="item" @click="selectCategory(item)" class="catergories_btn">
             {{ item }}
           </v-btn>
@@ -66,7 +67,7 @@
 </template>
 
 <script>
-import { mdiLockOpen } from '@mdi/js';
+import { mdiLockOpen, mdiTrashCanOutline } from '@mdi/js';
 import data from '../../assets/scenarios-override.json';
 
 export default {
@@ -83,6 +84,7 @@ export default {
 
       icons: {
         mdiLockOpen,
+        mdiTrashCanOutline,
       },
 
       oldSelected: false,
@@ -90,13 +92,14 @@ export default {
       showListOptions: true,
       scenarios: [],
       categories: [],
+      globalArray: [],
     };
   },
 
   mounted() {
     this.loading = false;
     let tempArry = [];
-    let globalArray = [];
+    // let globalArray = [];
 
     data.scenarios.forEach((element) => {
       element.categories.forEach((item) => {
@@ -110,24 +113,36 @@ export default {
       let obj = { category: '', data: [] };
       obj['category'] = category;
       obj['data'] = [];
-      globalArray.push(obj);
+      this.globalArray.push(obj);
     });
-    globalArray = [...new Set(globalArray)];
+    this.globalArray = [...new Set(this.globalArray)];
 
     data.scenarios.forEach((element) => {
-      globalArray.map((global) => {
+      this.globalArray.map((global) => {
         if (element.categories.includes(global['category'])) {
           global['data'].push(element);
         }
       });
     });
-    this.scenarios = globalArray;
+    this.scenarios = this.globalArray;
   },
 
   methods: {
     selectCategory(view) {
-      var access = document.getElementById(view);
-      access.scrollIntoView({ behavior: 'smooth' }, true);
+      // var access = document.getElementById(view);
+      // access.scrollIntoView({ behavior: 'smooth' }, true);
+      const allCategory = this.globalArray.filter((item) => item.category === view);
+      this.scenarios = allCategory;
+    },
+    allCategory() {
+      data.scenarios.forEach((element) => {
+        this.globalArray.map((global) => {
+          if (element.categories.includes(global['category'])) {
+            global['data'].push(element);
+          }
+        });
+      });
+      this.scenarios = this.globalArray;
     },
     navigateDetail(route) {
       this.$router.push(`/scenarioDetail/${route}`);
@@ -175,13 +190,18 @@ export default {
 .catergories_btn {
   border: 1px solid var(--cui-primary);
   color: var(--cui-primary);
-  margin: 0 5px;
+  margin: 5px;
 }
 
 .catergories_btn:hover {
   background: var(--cui-primary);
   color: white;
   transition: 0.6s;
+}
+
+.main_cat_btn {
+  background: var(--cui-primary) !important;
+  color: white !important;
 }
 
 .viewAll .view-all-link {
@@ -193,5 +213,26 @@ export default {
 .catergories_img {
   width: 100%;
   height: 100%;
+}
+
+@media (max-width: 568px) {
+  .scenario-section {
+    top: 15rem;
+  }
+}
+@media (min-width: 568px) and (max-width: 728px) {
+  .scenario-section {
+    top: 12rem;
+  }
+}
+@media (min-width: 728px) and (max-width: 1024px) {
+  .scenario-section {
+    top: 12rem;
+  }
+}
+@media (min-width: 1024px) and (max-width: 1680px) {
+  .scenario-section {
+    top: 8rem;
+  }
 }
 </style>

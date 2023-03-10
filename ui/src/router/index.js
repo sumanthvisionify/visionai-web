@@ -202,12 +202,12 @@ export const routes = [
     component: () => import(/* webpackChunkName: "camview" */ '@/views/Camview/Camview.vue'),
   },
   {
-    path: '/scenario',
+    path: '/scenarios',
     name: 'Scenarios',
     meta: {
       auth: {
         requiresAuth: true,
-        requiredLevel: [/*"cameras:access", */ 'scenario:access'],
+        requiredLevel: [/*"cameras:access", */ 'scenarios:access'],
       },
       config: {
         fixedNavbar: true,

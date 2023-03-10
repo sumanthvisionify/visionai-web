@@ -15,7 +15,7 @@
             </div>
             <div class="lg:tw-w-1/2">
               <h4 class="tw-text-3xl">{{ scenario.name }}</h4>
-              <p class="tw-text-md tw-w-90 tw-mt-5">{{ scenario.overview }}</p>
+              <p class="subitle2 tw-w-90 tw-mt-5">{{ scenario.overview }}</p>
             </div>
             <div class="lg:tw-w-1/3 tw-pr-10">
               <v-btn block color="var(--cui-primary)" class="tw-text-white py-5 tw-font-semibold"> GET THIS </v-btn>
@@ -64,27 +64,33 @@
           <!-- accuracy tab content -->
           <div class="tw-my-5 tw-mx-5 accuracy">
             <h3 class="text-xl">Accuracy</h3>
-            <div
-              class="tw-grid tw-grid-cols-1 md:tw-grid-cols-5 sm:tw-grid-cols-2 xs:tw-grid-cols-3 tw-gap-4 my-10 tw-mt-10"
+            <v-btn color="var(--cui-primary)" class="tw-text-white tw-font-semibold tw-my-5">
+              Model: PPE Detection 2.2.1</v-btn
             >
-              <div class="d-flex tw-justify-center tw-items-center">
-                <img src="../../assets/img/ppt20.svg" />
-              </div>
 
-              <div class="d-flex tw-justify-center tw-items-center">
-                <img src="../../assets/img/ppt21.svg" />
-              </div>
+            <div
+              class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 sm:tw-grid-cols-2 xs:tw-grid-cols-2 tw-gap-4 my-10 tw-mt-10"
+            >
+              <div>
+                <p class="subtitle2">Dataset : 250,340 images</p>
+                <v-chip-group>
+                  <v-chip>View Details</v-chip>
 
-              <div class="d-flex tw-justify-center tw-items-center">
-                <img src="../../assets/img/ppt22.svg" />
+                  <v-chip>Coutomize</v-chip>
+                </v-chip-group>
               </div>
+              <div class="d-flex tw-justify-between tw-items-center">
+                <div>
+                  <img src="../../assets/img/ppt22.svg" />
+                </div>
 
-              <div class="d-flex tw-justify-center tw-items-center">
-                <img src="../../assets/img/ppt23.svg" />
-              </div>
+                <div>
+                  <img src="../../assets/img/ppt23.svg" />
+                </div>
 
-              <div class="d-flex tw-justify-center tw-items-center">
-                <img src="../../assets/img/ppt24.svg" />
+                <div>
+                  <img src="../../assets/img/ppt24.svg" />
+                </div>
               </div>
             </div>
           </div>
