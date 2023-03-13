@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 
 module.exports = {
   important: true,
@@ -23,6 +24,9 @@ module.exports = {
         7: '7',
         8: '8',
         9: '9',
+      },
+      colors: {
+        emerald: colors.coolGray,
       },
     },
     screens: {
