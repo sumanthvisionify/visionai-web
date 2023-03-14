@@ -340,7 +340,9 @@ export default {
     isActive(index) {
       return index === this.activeIndex;
     },
-    submitCamera() {},
+    submitCamera() {
+      console.log('test');
+    },
   },
 };
 </script>
