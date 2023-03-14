@@ -320,25 +320,25 @@
             <v-row>
               <v-col cols="12" sm="6">
                 <div class="relative tw-max-w-sm">
-                  <span>Start Date:</span>
+                  <span>Start Time:</span>
                   <input
                     datepicker
-                    type="date"
+                    type="time"
                     class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
-                    placeholder="Star date"
-                    v-model="formData.notificationSchedule.startDate"
+                    placeholder="Star time"
+                    v-model="formData.notificationSchedule.startTime"
                   />
                 </div>
               </v-col>
               <v-col cols="12" sm="6">
                 <div class="relative tw-max-w-sm">
-                  <span>Stop Date:</span>
+                  <span>Stop Time:</span>
                   <input
                     datepicker
-                    type="date"
+                    type="time"
                     class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
-                    placeholder="Stop date"
-                    v-model="formData.notificationSchedule.stopDate"
+                    placeholder="Stop time"
+                    v-model="formData.notificationSchedule.stopTime"
                   />
                 </div>
               </v-col>
@@ -357,7 +357,7 @@
             ></v-select>
           </div>
 
-          <div class="tw-my-4">
+          <div class="tw-my-4" v-if="formData.recordingValue">
             <!-- <span>Select Recording Clip Duration:</span> -->
             <h4 class="text-sm">Select Recording Clip Duration:</h4>
             <v-select
@@ -414,8 +414,8 @@ export default {
         selectedEvents: [],
         selectedRecordingDuration: null,
         notificationSchedule: {
-          startDate: new Date(),
-          stopDate: new Date(),
+          startTime: null,
+          stopTime: null,
         },
       },
     };
@@ -463,7 +463,10 @@ export default {
     },
 
     submitCamera() {
-      //console.log(this.formData);
+      if (!this.formData.recordingValue) {
+        this.formData.selectedRecordingDuration = [];
+      }
+      console.log(this.formData);
       this.dialog = false;
     },
   },
