@@ -4,7 +4,7 @@
   </div>
   <div v-else>
     <div class="scenario" v-if="!showForm">
-      <div gutters class="d-flex tw-flex-wrap" :style="{ showForm: display ? 'fixed' : 'inherit' }">
+      <div gutters class="d-flex tw-flex-wrap tw-fixed">
         <!-- scenario detail section -->
         <div class="tw-w-full md:tw-w-3/4 lg:tw-w-2/3 xl:tw-w-3/4">
           <div class="scenario-wrapper">
@@ -16,12 +16,11 @@
                   />
                 </div>
                 <div class="lg:tw-w-1/2">
-                  <h4 class="tw-text-3xl">{{ scenario.name }}</h4>
-                  <p class="subitle2 tw-w-90 tw-mt-5">{{ scenario.overview }}</p>
+                  <h4 class="tw-text-2xl">{{ scenario.name }}</h4>
+                  <p class="tw-text-sm tw-w-100 tw-mt-5">{{ scenario.overview }}</p>
                 </div>
-                <div class="lg:tw-w-1/3 tw-pr-10">
+                <div class="lg:tw-w-1/6 tw-pr-10">
                   <v-btn
-                    block
                     color="var(--cui-primary)"
                     class="tw-text-white py-5 tw-font-semibold"
                     @click="showForm = true"
@@ -192,10 +191,10 @@
         </div>
 
         <!-- simillar section -->
-        <div class="tw-w-full md:tw-w-1/4 lg:tw-w-1/3 xl:tw-w-1/4 tw-pl-3">
-          <div class="right-section tw-h-screen tw-overflow-y-auto">
+        <div class="tw-w-full md:tw-w-1/4 lg:tw-w-1/3 xl:tw-w-1/4 tw-pl-2 tw-relative">
+          <div class="right-section tw-h-screen tw-overflow-y-auto tw-fixed">
             <div class="tw-my-4">
-              <h3 class="text-xl tw-text-left">You may also need</h3>
+              <h3 class="tw-text-md tw-text-left">You may also need</h3>
             </div>
             <div
               v-for="n in 8"
@@ -208,8 +207,8 @@
                 />
               </div>
               <div>
-                <h3 class="text-xl">{{ scenario.name }}</h3>
-                <p class="subtitle2">Detect face masks for preventing the spread of COVID-19</p>
+                <h3 class="tw-text-md">{{ scenario.name }}</h3>
+                <p class="tw-text-sm">Detect face masks for preventing the spread of COVID-19</p>
               </div>
             </div>
           </div>
@@ -219,7 +218,7 @@
 
     <div v-if="showForm" class="tw-shadow tw-rounded-mg tw-bg-white form">
       <div class="tw-mx-20">
-        <h3 class="text-xl tw-text-center tw-py-10">{{ indexForm ? 'Select Camera' : 'Terms & Conditions' }}</h3>
+        <h3 class="text-xl tw-text-center tw-py-8">{{ indexForm ? 'Select Camera' : 'Terms & Conditions' }}</h3>
 
         <div class="stepper-card-bg-white">
           <div class="scroll-bg-gray tw-my-30">
@@ -266,12 +265,12 @@
 
             <div v-if="indexForm">
               <v-row>
-                <v-col v-for="n in 12" :key="n" cols="12" sm="12" xs="12" md="6" lg="4" xl="3">
-                  <div>
+                <v-col v-for="item in cameras" :key="item" cols="12" sm="12" xs="12" md="6" lg="3" xl="3">
+                  <div class="tw-shadow-md tw-rounded-md tw-h-52 tw-w-52 d-flex">
                     <img
-                      src="https://webapp-msejccxdwi33c.azurewebsites.net/static/media/ppt30.a9ece9fcf7f37e505527f7fc420bcbc3.svg"
-                      class="camera-img"
-                      alt=""
+                      :class="[{ selected: isSelected(item) }, 'tw-w-full', 'tw-h-full']"
+                      src="https://webapp-msejccxdwi33c.azurewebsites.net/static/media/ppt33.32b862806e905d5b23b466e018758564.svg"
+                      @click="selectCameras(item)"
                     />
                   </div>
                 </v-col>
@@ -280,7 +279,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex tw-justify-center tw-mt-10">
+      <div class="d-flex tw-justify-center tw-mt-8">
         <v-btn
           v-if="!indexForm"
           size="x-large"
@@ -296,20 +295,100 @@
           size="x-large"
           color="var(--cui-primary)"
           class="tw-text-white tw-font-semibold"
-          @click="submitCamera"
+          @click="dialog = true"
         >
           Select For Camera
         </v-btn>
       </div>
     </div>
+
+    <v-dialog v-model="dialog" max-width="800">
+      <v-card>
+        <v-card-title class="headline">Details for Camera</v-card-title>
+        <v-card-text>
+          <div class="d-flex tw-gap-4">
+            <div>
+              <v-checkbox v-model="formData.notificationValue" label="Notification"></v-checkbox>
+            </div>
+            <div>
+              <v-checkbox v-model="formData.recordingValue" label="Recordings"></v-checkbox>
+            </div>
+          </div>
+
+          <div class="tw-my-4">
+            <h4 class="text-sm tw-my-3">Notification Schedule:</h4>
+            <v-row>
+              <v-col cols="12" sm="6">
+                <div class="relative tw-max-w-sm">
+                  <span>Start Date:</span>
+                  <input
+                    datepicker
+                    type="date"
+                    class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
+                    placeholder="Star date"
+                    v-model="formData.notificationSchedule.startDate"
+                  />
+                </div>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <div class="relative tw-max-w-sm">
+                  <span>Stop Date:</span>
+                  <input
+                    datepicker
+                    type="date"
+                    class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
+                    placeholder="Stop date"
+                    v-model="formData.notificationSchedule.stopDate"
+                  />
+                </div>
+              </v-col>
+            </v-row>
+          </div>
+          <div class="tw-my-4">
+            <!-- <span>Select Events:</span> -->
+            <h4 class="text-sm">Select Events:</h4>
+            <v-select
+              v-model="formData.selectedEvents"
+              :items="scenario.events"
+              multiple
+              chips
+              variant="underlined"
+              label="Event"
+            ></v-select>
+          </div>
+
+          <div class="tw-my-4">
+            <!-- <span>Select Recording Clip Duration:</span> -->
+            <h4 class="text-sm">Select Recording Clip Duration:</h4>
+            <v-select
+              :items="recordingDurations"
+              v-model="formData.selectedRecordingDuration"
+              chips
+              variant="underlined"
+              label="Recording Clip Duration"
+            ></v-select>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="dialog = false">Close</v-btn>
+          <v-btn color="var(--cui-primary)" class="tw-text-white tw-font-semibold" @click="submitCamera()"
+            >Submit</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import data from '../../assets/scenarios-override.json';
+import { getCameras } from '@/api/cameras.api';
 
 export default {
   name: 'ScenarioDetail',
+
+  components: {},
 
   beforeRouteLeave(to, from, next) {
     this.loading = true;
@@ -324,6 +403,21 @@ export default {
       tabItems: ['Overview', 'Accuracy', 'Event', 'User Manual'],
       showForm: false,
       indexForm: false,
+      cameras: [],
+      imgSource: '',
+      selectedCameras: [],
+      dialog: false,
+      recordingDurations: [10, 20, 30, 40, 50, 60],
+      formData: {
+        notificationValue: false,
+        recordingValue: false,
+        selectedEvents: [],
+        selectedRecordingDuration: null,
+        notificationSchedule: {
+          startDate: new Date(),
+          stopDate: new Date(),
+        },
+      },
     };
   },
 
@@ -331,6 +425,9 @@ export default {
     this.loading = false;
     const scenario = data.scenarios.find((item) => item.id === this.$route.params.id);
     this.scenario = scenario;
+
+    // get camera funcion here
+    this.getCamera();
   },
 
   methods: {
@@ -340,12 +437,43 @@ export default {
     isActive(index) {
       return index === this.activeIndex;
     },
-    submitCamera() {},
+    async getCamera() {
+      try {
+        const response = await getCameras();
+        if (response.data.result.length > 0) {
+          this.cameras.push(...response.data.result);
+        }
+      } catch (err) {
+        console.log(err);
+        this.$toast.error(err.message);
+      }
+    },
+    isSelected(item) {
+      return this.selectedCameras.includes(item);
+    },
+
+    selectCameras(item) {
+      if (this.isSelected(item)) {
+        // If the item is already selected, remove it from the array
+        this.selectedCameras = this.selectedCameras.filter((selectedItem) => selectedItem !== item);
+      } else {
+        // If the item is not selected, add it to the array
+        this.selectedCameras.push(item);
+      }
+    },
+
+    submitCamera() {
+      //console.log(this.formData);
+      this.dialog = false;
+    },
   },
 };
 </script>
 
 <style scoped>
+.selected {
+  border: 2px solid var(--cui-primary);
+}
 .scenario-img img {
   width: 100%;
 }
@@ -368,7 +496,7 @@ export default {
   color: #183153;
   padding: 20px 20px;
   text-decoration: none;
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 
 .tab ul li a:hover {
@@ -399,7 +527,7 @@ export default {
   background: #f8f8f8;
   padding: 15px 30px;
   padding-top: 50px;
-  height: 500px;
+  height: 400px;
   overflow-y: scroll;
 }
 .form .stepper-card-bg-white {
