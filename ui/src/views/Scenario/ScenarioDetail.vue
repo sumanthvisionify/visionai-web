@@ -197,9 +197,9 @@
               <h3 class="tw-text-md tw-text-left">You may also need</h3>
             </div>
             <div
-              v-for="n in 8"
-              :key="n"
-              class="tw-my-4 tw-w-96 d-flex tw-justify-between tw-gap-x-5 tw-shadow tw-rounded-mg tw-bg-white tw-p-5"
+              v-for="item in scenarios"
+              :key="item.id"
+              class="tw-my-4 d-flex tw-justify-between tw-gap-x-5 tw-shadow tw-rounded-mg tw-bg-white tw-p-5"
             >
               <div>
                 <img
@@ -207,8 +207,8 @@
                 />
               </div>
               <div>
-                <h3 class="tw-text-md">{{ scenario.name }}</h3>
-                <p class="tw-text-sm">Detect face masks for preventing the spread of COVID-19</p>
+                <h3 class="tw-text-md">{{ item.name }}</h3>
+                <p class="tw-text-sm tw-h-24 overflow-y-auto">{{ item.overview }}</p>
               </div>
             </div>
           </div>
@@ -304,69 +304,223 @@
 
     <v-dialog v-model="dialog" max-width="800">
       <v-card>
-        <v-card-title class="headline">Details for Camera</v-card-title>
+        <v-card-title class="page-title">Settings</v-card-title>
         <v-card-text>
-          <div class="d-flex tw-gap-4">
-            <div>
-              <v-checkbox v-model="formData.notificationValue" label="Notification"></v-checkbox>
-            </div>
-            <div>
-              <v-checkbox v-model="formData.recordingValue" label="Recordings"></v-checkbox>
-            </div>
-          </div>
-
-          <div class="tw-my-4">
-            <h4 class="text-sm tw-my-3">Notification Schedule:</h4>
+          <!-- Schedule -->
+          <div class="form-section tw-pb-4">
             <v-row>
-              <v-col cols="12" sm="6">
-                <div class="relative tw-max-w-sm">
-                  <span>Start Time:</span>
-                  <input
-                    datepicker
-                    type="time"
-                    class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
-                    placeholder="Star time"
-                    v-model="formData.notificationSchedule.startTime"
-                  />
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-card-title class="page-subtitle">Schedule</v-card-title>
                 </div>
               </v-col>
-              <v-col cols="12" sm="6">
-                <div class="relative tw-max-w-sm">
-                  <span>Stop Time:</span>
-                  <input
-                    datepicker
-                    type="time"
-                    class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
-                    placeholder="Stop time"
-                    v-model="formData.notificationSchedule.stopTime"
-                  />
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <!-- <v-checkbox v-model="formData.everyday" label="Everyday"></v-checkbox>
+                  <v-checkbox v-model="formData.continues" label="Continues"></v-checkbox> -->
+                  <v-radio-group v-model="formData.schedule" inline>
+                    <v-radio label="Everyday" value="everyday"></v-radio>
+                    <v-radio label="Weekdays (M.F.)" value="weekdays"></v-radio>
+                    <v-radio label="Continues" value="continues"></v-radio>
+                  </v-radio-group>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="6" xs="6" md="6" lg="6" xl="6">
+                <v-radio-group inline>
+                  <v-radio label="From" value="true"></v-radio>
+                </v-radio-group>
+
+                <div class="d-flex justify-between tw-gap-4 pb-1">
+                  <div>
+                    <!-- <span>From</span>
+                    <input type="time" v-model="formData.scheduleTime.startTime" /> -->
+                    <span>From:</span>
+                    <input
+                      datepicker
+                      type="time"
+                      class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
+                      v-model="formData.startTime"
+                    />
+                  </div>
+                  <div>
+                    <!-- <span>To</span>
+                    <input type="time" v-model="formData.scheduleTime.endTime" /> -->
+                    <span>To:</span>
+                    <input
+                      datepicker
+                      type="time"
+                      class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
+                      v-model="formData.endTime"
+                    />
+                  </div>
                 </div>
               </v-col>
             </v-row>
           </div>
-          <div class="tw-my-4">
-            <!-- <span>Select Events:</span> -->
-            <h4 class="text-sm">Select Events:</h4>
-            <v-select
-              v-model="formData.selectedEvents"
-              :items="scenario.events"
-              multiple
-              chips
-              variant="underlined"
-              label="Event"
-            ></v-select>
+
+          <!-- Notification -->
+          <div class="form-section">
+            <v-row>
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-card-title class="page-subtitle">Notification</v-card-title>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="9" xs="9" md="9" lg="9" xl="9">
+                <div>
+                  <v-checkbox v-model="formData.notification" label=""></v-checkbox>
+                </div>
+              </v-col>
+            </v-row>
+
+            <v-row v-if="formData.notification">
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-card-title class="page-subtitle tw-text-lg">Events</v-card-title>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="9" xs="9" md="9" lg="9" xl="9">
+                <div>
+                  <v-select
+                    v-model="formData.selectedEvents"
+                    :items="scenario.events"
+                    multiple
+                    chips
+                    variant="underlined"
+                    label="Event"
+                  ></v-select>
+                </div>
+              </v-col>
+            </v-row>
+
+            <v-row v-if="formData.notification">
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-card-title class="page-subtitle-info">Event Level</v-card-title>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="9" xs="9" md="9" lg="9" xl="9">
+                <div>
+                  <v-radio-group v-model="formData.eventLevelNotification" inline>
+                    <v-radio label="Critical Only" value="critical only"></v-radio>
+                    <v-radio label="Recommended" value="recommended"></v-radio>
+                    <v-radio label="All" value="all"></v-radio>
+                  </v-radio-group>
+                </div>
+              </v-col>
+            </v-row>
+
+            <v-row v-if="formData.notification">
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-card-title class="page-subtitle-info">Event Push</v-card-title>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-checkbox v-model="formData.eventPush.redis" label="Redis"></v-checkbox>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <v-checkbox v-model="formData.eventPush.azureEventHub" label="Azure EventHub"></v-checkbox>
+              </v-col>
+            </v-row>
+
+            <v-row v-if="formData.notification">
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-card-title class="page-subtitle-info">Webhook</v-card-title>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="6" xs="6" md="6" lg="6" xl="6">
+                <div>
+                  <!-- <input
+                    class="tw-shadow tw-appearance-none tw-border tw-rounded tw-w-full tw-py-2 tw-px-3 tw-text-gray-700 tw-leading-tight focus:tw-outline-none focus:tw-shadow-outline"
+                    id="username"
+                    type="text"
+                    placeholder="Username"
+                  /> -->
+                  <v-text-field required v-model="formData.webhook"></v-text-field>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="2" xs="2" md="2" lg="2" xl="2">
+                <v-btn class="tw-my-3" color="tonal">Save</v-btn>
+              </v-col>
+            </v-row>
           </div>
 
-          <div class="tw-my-4" v-if="formData.recordingValue">
-            <!-- <span>Select Recording Clip Duration:</span> -->
-            <h4 class="text-sm">Select Recording Clip Duration:</h4>
-            <v-select
-              :items="recordingDurations"
-              v-model="formData.selectedRecordingDuration"
-              chips
-              variant="underlined"
-              label="Recording Clip Duration"
-            ></v-select>
+          <!-- Recordings -->
+          <div class="form-section">
+            <v-row>
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-card-title class="page-subtitle">Recordings</v-card-title>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="9" xs="9" md="9" lg="9" xl="9">
+                <div>
+                  <v-checkbox v-model="formData.recordings" label=""></v-checkbox>
+                </div>
+              </v-col>
+            </v-row>
+            <v-row v-if="formData.recordings">
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-card-title class="page-subtitle-info">Recording Time</v-card-title>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-radio-group v-model="formData.recordingTime" inline>
+                    <v-radio label="30s" value="30s"></v-radio>
+                    <v-radio label="1min" value="1min"></v-radio>
+                  </v-radio-group>
+                </div>
+              </v-col>
+            </v-row>
+
+            <v-row v-if="formData.recordings">
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-card-title class="page-subtitle-info">Event Level</v-card-title>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="9" xs="9" md="9" lg="9" xl="9">
+                <div>
+                  <v-radio-group v-model="formData.eventLevelRecordings" inline>
+                    <v-radio label="Critical Only" value="critical only"></v-radio>
+                    <v-radio label="Recommended" value="recommended"></v-radio>
+                    <v-radio label="All" value="all"></v-radio>
+                  </v-radio-group>
+                </div>
+              </v-col>
+            </v-row>
+
+            <v-row v-if="formData.recordings">
+              <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
+                <div>
+                  <v-card-title class="page-subtitle-info">Archive Recordings</v-card-title>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="6" xs="6" md="6" lg="6" xl="6">
+                <div>
+                  <!-- <input
+                    class="tw-shadow tw-appearance-none tw-border tw-rounded tw-w-full tw-py-2 tw-px-3 tw-text-gray-700 tw-leading-tight focus:tw-outline-none focus:tw-shadow-outline"
+                    id="username"
+                    type="text"
+                    placeholder="Username"
+                  /> -->
+                  <v-text-field
+                    required
+                    v-model="formData.acrhiveRecordings"
+                    placeholder="Azure Blob Storage"
+                  ></v-text-field>
+                </div>
+              </v-col>
+              <v-col cols="12" sm="2" xs="2" md="2" lg="2" xl="2">
+                <v-btn class="tw-my-3" color="tonal">Save</v-btn>
+              </v-col>
+            </v-row>
           </div>
         </v-card-text>
         <v-card-actions>
@@ -399,6 +553,7 @@ export default {
     return {
       loading: true,
       scenario: {},
+      scenarios: [],
       activeIndex: 0,
       tabItems: ['Overview', 'Accuracy', 'Event', 'User Manual'],
       showForm: false,
@@ -409,14 +564,23 @@ export default {
       dialog: false,
       recordingDurations: [10, 20, 30, 40, 50, 60],
       formData: {
-        notificationValue: false,
-        recordingValue: false,
+        schedule: null,
+        startTime: null,
+        endTime: null,
+
+        notification: false,
         selectedEvents: [],
-        selectedRecordingDuration: null,
-        notificationSchedule: {
-          startTime: null,
-          stopTime: null,
+        eventLevelNotification: null,
+        eventPush: {
+          redis: false,
+          azureEventHub: false,
         },
+        webhook: '',
+
+        recordings: false,
+        recordingTime: null,
+        eventLevelRecordings: null,
+        acrhiveRecordings: '',
       },
     };
   },
@@ -425,6 +589,7 @@ export default {
     this.loading = false;
     const scenario = data.scenarios.find((item) => item.id === this.$route.params.id);
     this.scenario = scenario;
+    this.scenarios = data.scenarios;
 
     // get camera funcion here
     this.getCamera();
@@ -463,8 +628,35 @@ export default {
     },
 
     submitCamera() {
-      if (!this.formData.recordingValue) {
-        this.formData.selectedRecordingDuration = [];
+      if (this.formData.schedule === null || this.formData.startTime === null || this.formData.endTime === null) {
+        // handle error when required fields are not filled
+        this.$toast.error('All fields are reuired');
+        return;
+      }
+
+      if (this.formData.notification) {
+        if (
+          this.formData.selectedEvents.length === 0 ||
+          this.formData.eventLevelNotification === null ||
+          (!this.formData.eventPush.redis && !this.formData.eventPush.azureEventHub) ||
+          this.formData.webhook === ''
+        ) {
+          // handle error when notification fields are not filled
+          this.$toast.error('All Notification fields are reuired');
+          return;
+        }
+      }
+
+      if (this.formData.recordings) {
+        if (
+          this.formData.recordingTime === null ||
+          this.formData.eventLevelRecordings === null ||
+          this.formData.acrhiveRecordings === ''
+        ) {
+          // handle error when recording fields are not filled
+          this.$toast.error('All Recordings fields are reuired');
+          return;
+        }
       }
       console.log(this.formData);
       this.dialog = false;
@@ -474,6 +666,21 @@ export default {
 </script>
 
 <style scoped>
+.page-title {
+  font-size: 1.3rem !important;
+  letter-spacing: -0.025em !important;
+  font-weight: 700 !important;
+  line-height: 1.5 !important;
+  border-bottom: 1px solid #cbc4c4;
+}
+.page-subtitle {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+}
+.page-subtitle-info {
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+}
 .selected {
   border: 2px solid var(--cui-primary);
 }
@@ -539,5 +746,21 @@ export default {
 }
 .camera-img {
   width: 100%;
+}
+
+.title {
+  font-size: 1.3rem !important;
+  letter-spacing: -0.025em !important;
+  font-weight: 700 !important;
+  line-height: 1.5 !important;
+}
+
+.form-section {
+  margin: 10px 0;
+  border-bottom: 1px solid #cbc4c4;
+}
+
+.v-radio__label input[type='radio'] {
+  box-shadow: none;
 }
 </style>
