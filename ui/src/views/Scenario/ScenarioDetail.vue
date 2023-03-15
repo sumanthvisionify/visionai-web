@@ -268,7 +268,7 @@
                 <v-col v-for="item in cameras" :key="item" cols="12" sm="12" xs="12" md="6" lg="3" xl="3">
                   <div class="tw-shadow-md tw-rounded-md tw-h-52 tw-w-52 d-flex">
                     <img
-                      :class="[{ selected: isSelected(item) }, 'tw-w-full', 'tw-h-full']"
+                      :class="[{ selected: isSelected(item.name) }, 'tw-w-full', 'tw-h-full']"
                       src="https://webapp-msejccxdwi33c.azurewebsites.net/static/media/ppt33.32b862806e905d5b23b466e018758564.svg"
                       @click="selectCameras(item)"
                     />
@@ -295,7 +295,7 @@
           size="x-large"
           color="var(--cui-primary)"
           class="tw-text-white tw-font-semibold"
-          @click="dialog = true"
+          @click="openDialog()"
         >
           Select For Camera
         </v-btn>
@@ -319,16 +319,15 @@
                   <!-- <v-checkbox v-model="formData.everyday" label="Everyday"></v-checkbox>
                   <v-checkbox v-model="formData.continues" label="Continues"></v-checkbox> -->
                   <v-radio-group v-model="formData.schedule" inline>
-                    <v-radio label="Everyday" value="everyday"></v-radio>
-                    <v-radio label="Weekdays (M.F.)" value="weekdays"></v-radio>
-                    <v-radio label="Continues" value="continues"></v-radio>
+                    <v-radio label="Everyday" value="everyday" class="tw-my-3 tw-mx-3"></v-radio>
+                    <v-radio label="Weekdays (M.F.)" class="tw-my-3 tw-mx-3" value="weekdays"></v-radio>
                   </v-radio-group>
                 </div>
               </v-col>
               <v-col cols="12" sm="6" xs="6" md="6" lg="6" xl="6">
-                <v-radio-group inline>
-                  <v-radio label="From" value="true"></v-radio>
-                </v-radio-group>
+                <div>
+                  <v-checkbox v-model="formData.allDay" label="Continues" @change="onAllDayChange"></v-checkbox>
+                </div>
 
                 <div class="d-flex justify-between tw-gap-4 pb-1">
                   <div>
@@ -340,6 +339,7 @@
                       type="time"
                       class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
                       v-model="formData.startTime"
+                      :disabled="formData.allDay"
                     />
                   </div>
                   <div>
@@ -351,6 +351,7 @@
                       type="time"
                       class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
                       v-model="formData.endTime"
+                      :disabled="formData.allDay"
                     />
                   </div>
                 </div>
@@ -376,7 +377,7 @@
             <v-row v-if="formData.notification">
               <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
                 <div>
-                  <v-card-title class="page-subtitle tw-text-lg">Events</v-card-title>
+                  <v-card-title class="page-subtitle-info">Events</v-card-title>
                 </div>
               </v-col>
               <v-col cols="12" sm="9" xs="9" md="9" lg="9" xl="9">
@@ -402,9 +403,9 @@
               <v-col cols="12" sm="9" xs="9" md="9" lg="9" xl="9">
                 <div>
                   <v-radio-group v-model="formData.eventLevelNotification" inline>
-                    <v-radio label="Critical Only" value="critical only"></v-radio>
-                    <v-radio label="Recommended" value="recommended"></v-radio>
-                    <v-radio label="All" value="all"></v-radio>
+                    <v-radio class="tw-my-3 tw-mx-3" label="Critical Only" value="critical only"></v-radio>
+                    <v-radio class="tw-my-3 tw-mx-3" label="Recommended" value="recommended"></v-radio>
+                    <v-radio class="tw-my-3 tw-mx-3" label="All" value="all"></v-radio>
                   </v-radio-group>
                 </div>
               </v-col>
@@ -418,11 +419,19 @@
               </v-col>
               <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
                 <div>
-                  <v-checkbox v-model="formData.eventPush.redis" label="Redis"></v-checkbox>
+                  <v-checkbox
+                    v-model="formData.eventPush.redis"
+                    label="Redis"
+                    @click="updateSelectedEventPushValues('redis')"
+                  ></v-checkbox>
                 </div>
               </v-col>
               <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
-                <v-checkbox v-model="formData.eventPush.azureEventHub" label="Azure EventHub"></v-checkbox>
+                <v-checkbox
+                  v-model="formData.eventPush.azureEventHub"
+                  label="Azure EventHub"
+                  @click="updateSelectedEventPushValues('azure')"
+                ></v-checkbox>
               </v-col>
             </v-row>
 
@@ -444,7 +453,7 @@
                 </div>
               </v-col>
               <v-col cols="12" sm="2" xs="2" md="2" lg="2" xl="2">
-                <v-btn class="tw-my-3" color="tonal">Save</v-btn>
+                <v-btn class="tw-my-3" color="tonal">Test</v-btn>
               </v-col>
             </v-row>
           </div>
@@ -472,8 +481,8 @@
               <v-col cols="12" sm="3" xs="3" md="3" lg="3" xl="3">
                 <div>
                   <v-radio-group v-model="formData.recordingTime" inline>
-                    <v-radio label="30s" value="30s"></v-radio>
-                    <v-radio label="1min" value="1min"></v-radio>
+                    <v-radio class="tw-my-3 tw-mx-3" label="30s" value="30s"></v-radio>
+                    <v-radio class="tw-my-3 tw-mx-3" label="1min" value="1min"></v-radio>
                   </v-radio-group>
                 </div>
               </v-col>
@@ -488,9 +497,9 @@
               <v-col cols="12" sm="9" xs="9" md="9" lg="9" xl="9">
                 <div>
                   <v-radio-group v-model="formData.eventLevelRecordings" inline>
-                    <v-radio label="Critical Only" value="critical only"></v-radio>
-                    <v-radio label="Recommended" value="recommended"></v-radio>
-                    <v-radio label="All" value="all"></v-radio>
+                    <v-radio class="tw-my-3 tw-mx-3" label="Critical Only" value="critical only"></v-radio>
+                    <v-radio class="tw-my-3 tw-mx-3" label="Recommended" value="recommended"></v-radio>
+                    <v-radio class="tw-my-3 tw-mx-3" label="All" value="all"></v-radio>
                   </v-radio-group>
                 </div>
               </v-col>
@@ -518,17 +527,15 @@
                 </div>
               </v-col>
               <v-col cols="12" sm="2" xs="2" md="2" lg="2" xl="2">
-                <v-btn class="tw-my-3" color="tonal">Save</v-btn>
+                <v-btn class="tw-my-3" color="tonal">Test</v-btn>
               </v-col>
             </v-row>
           </div>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="dialog = false">Close</v-btn>
-          <v-btn color="var(--cui-primary)" class="tw-text-white tw-font-semibold" @click="submitCamera()"
-            >Submit</v-btn
-          >
+          <v-btn text @click="dialog = false">Close</v-btn>
+          <v-btn text color="primary" @click="submitCamera()">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -563,8 +570,10 @@ export default {
       selectedCameras: [],
       dialog: false,
       recordingDurations: [10, 20, 30, 40, 50, 60],
+      selectedEventPushValues: [],
       formData: {
         schedule: null,
+        allDay: false,
         startTime: null,
         endTime: null,
 
@@ -613,26 +622,67 @@ export default {
         this.$toast.error(err.message);
       }
     },
-    isSelected(item) {
-      return this.selectedCameras.includes(item);
+    isSelected(name) {
+      return this.selectedCameras.includes(name);
     },
-
     selectCameras(item) {
-      if (this.isSelected(item)) {
+      if (this.isSelected(item.name)) {
         // If the item is already selected, remove it from the array
-        this.selectedCameras = this.selectedCameras.filter((selectedItem) => selectedItem !== item);
+        this.selectedCameras = this.selectedCameras.filter((selectedItem) => selectedItem !== item.name);
       } else {
         // If the item is not selected, add it to the array
-        this.selectedCameras.push(item);
+        this.selectedCameras.push(item.name);
+      }
+    },
+    openDialog() {
+      if (this.selectedCameras.length) {
+        this.dialog = true;
+      } else {
+        this.$toast.error('Camera is required');
+      }
+    },
+    updateSelectedEventPushValues(value) {
+      // check if the value is already selected
+      const index = this.selectedEventPushValues.indexOf(value);
+      if (index === -1) {
+        // add value to the array if it's not already selected
+        this.selectedEventPushValues.push(value);
+      } else {
+        // remove value from the array if it's already selected
+        this.selectedEventPushValues.splice(index, 1);
+      }
+    },
+
+    onAllDayChange() {
+      // // Set formData.allDay to the selected value
+      // this.formData.allDay = event.target.checked;
+
+      // When user unselects "Continues" option
+      if (!this.formData.allDay) {
+        // Set startTime and endTime to null
+        this.formData.startTime = null;
+        this.formData.endTime = null;
       }
     },
 
     submitCamera() {
-      if (this.formData.schedule === null || this.formData.startTime === null || this.formData.endTime === null) {
-        // handle error when required fields are not filled
-        this.$toast.error('All fields are reuired');
+      if (
+        this.formData.schedule === null ||
+        (this.formData.allDay === false && (this.formData.startTime === null || this.formData.endTime === null))
+      ) {
+        this.$toast.error('All fields are required');
         return;
       }
+
+      // if (!this.formData.allDay && this.formData.startTime && this.formData.endTime) {
+      //   const startTimeStamp = new Date(`2000-01-01T${this.formData.startTime}`).getTime();
+      //   const endTimeStamp = new Date(`2000-01-01T${this.formData.endTime}`).getTime();
+      //   const diffHours = (endTimeStamp - startTimeStamp) / 1000 / 60 / 60;
+      //   if (diffHours < 24) {
+      //     this.$toast.error('End time must be at least 24 hours after start time');
+      //     return;
+      //   }
+      // }
 
       if (this.formData.notification) {
         if (
@@ -658,8 +708,27 @@ export default {
           return;
         }
       }
-      console.log(this.formData);
+
+      let pauloadObject = {
+        cameras: this.selectedCameras,
+        scenario: {
+          name: this.scenario.name,
+          schedule: this.formData.schedule,
+          schedule_time: { start: this.formData.startTime, end: this.formData.endTime },
+          all_day: this.formData.allDay,
+          notification: this.formData.notification,
+          events: this.formData.selectedEvents,
+          event_level: this.formData.eventLevelNotification,
+          event_push: this.selectedEventPushValues,
+          webhook: this.formData.webhook,
+          recordings: this.formData.recordings,
+          recording_event_level: this.formData.eventLevelRecordings,
+          archive_recordings: this.formData.acrhiveRecordings,
+        },
+      };
       this.dialog = false;
+      console.log('form data', this.formData);
+      console.log('api data', pauloadObject);
     },
   },
 };
