@@ -340,6 +340,8 @@
                       class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
                       v-model="formData.startTime"
                       :disabled="formData.allDay"
+                      step="1800"
+                      time-format="h:mm a"
                     />
                   </div>
                   <div>
@@ -351,6 +353,8 @@
                       type="time"
                       class="tw-bg-gray-100 tw-border tw-border-gray-300 tw-text-gray-900 tw-text-sm tw-rounded-lg focus:tw-ring-blue-500 focus:tw-border-blue-500 block tw-w-full tw-pl-10 tw-p-2.5 dark:tw-bg-gray-700 dark:tw-border-gray-600 dark:tw-placeholder-gray-400 dark:tw-text-white dark:focus:tw-ring-blue-500 dark:focus:tw-border-blue-500"
                       v-model="formData.endTime"
+                      step="1800"
+                      time-format="h:mm a"
                       :disabled="formData.allDay"
                     />
                   </div>
@@ -545,6 +549,7 @@
 <script>
 import data from '../../assets/scenarios-override.json';
 import { getCameras } from '@/api/cameras.api';
+import moment from 'moment';
 
 export default {
   name: 'ScenarioDetail',
@@ -674,15 +679,27 @@ export default {
         return;
       }
 
-      // if (!this.formData.allDay && this.formData.startTime && this.formData.endTime) {
-      //   const startTimeStamp = new Date(`2000-01-01T${this.formData.startTime}`).getTime();
-      //   const endTimeStamp = new Date(`2000-01-01T${this.formData.endTime}`).getTime();
-      //   const diffHours = (endTimeStamp - startTimeStamp) / 1000 / 60 / 60;
-      //   if (diffHours < 24) {
-      //     this.$toast.error('End time must be at least 24 hours after start time');
-      //     return;
-      //   }
-      // }
+      if (!this.formData.allDay && this.formData.startTime && this.formData.endTime) {
+        const selectedMomentStartTime = moment(this.formData.startTime, 'HH:mm');
+        const formattedStartTime = selectedMomentStartTime.format('h:mm a');
+
+        const selectedMomentEndTime = moment(this.formData.endTime, 'HH:mm');
+        const formattedStartEndTime = selectedMomentEndTime.format('h:mm a');
+
+        // const startDateTime = moment(`2000-01-01T${this.formData.startTime}`).toDate();
+        // const endDateTime = moment(`2000-01-01T${this.formData.startTime}`).toDate();
+        // const diffHours = (endDateTime - startDateTime) / 1000 / 60 / 60;
+
+        const startDateTime = moment(`2000-01-01T${formattedStartTime}`, 'YYYY-MM-DDTHH:mm').toDate();
+        const endDateTime = moment(`2000-01-01T${formattedStartEndTime}`, 'YYYY-MM-DDTHH:mm').toDate();
+        const diffHours = (endDateTime - startDateTime) / 1000 / 60 / 60;
+
+        console.log('start:', diffHours, startDateTime, endDateTime);
+        if (diffHours < 1) {
+          this.$toast.error('End time must be at least 24 hours after start time');
+          return;
+        }
+      }
 
       if (this.formData.notification) {
         if (
