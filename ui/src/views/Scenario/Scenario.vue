@@ -41,7 +41,7 @@
                     <span
                       v-for="tag in data.tags"
                       :key="tag"
-                      class="tw-bg-gray-100 tw-rounded-md tw-px-2 tw-py-1 tw-text-xs"
+                      class="tw-bg-gray-100 tw-rounded-md tw-px-2 tw-py-1 tw-text-xs" style="margin: 5px; padding: 5px;"
                     >
                       {{ tag }}
                     </span>
@@ -173,7 +173,7 @@ export default {
 
 .category_section-item {
   flex-basis: calc(100% - 20px);
-  margin: 10px;
+  margin: 15px;
 }
 
 .page-title {
@@ -181,6 +181,7 @@ export default {
   letter-spacing: -0.025em !important;
   font-weight: 700 !important;
   line-height: 1.5 !important;
+  margin-bottom: 50px;
 }
 
 .card_bottom {

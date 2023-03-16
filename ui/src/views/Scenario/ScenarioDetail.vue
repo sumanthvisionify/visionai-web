@@ -17,7 +17,7 @@
                 </div>
                 <div class="lg:tw-w-1/2">
                   <h4 class="tw-text-2xl">{{ scenario.name }}</h4>
-                  <p class="tw-text-sm tw-w-100 tw-mt-5">{{ scenario.overview }}</p>
+                  <p class="tw-text-sm tw-w-100 tw-mt-5" style="text-align: justify;">{{ scenario.overview }}</p>
                 </div>
                 <div class="lg:tw-w-1/6 tw-pr-10">
                   <v-btn
@@ -40,7 +40,7 @@
           </div>
 
           <!-- overview tabs content -->
-          <div class="tw-p-4 tw-h-screen tw-overflow-y-auto">
+          <div class="tw-p-4 tw-h-screen tw-overflow-y-auto scroll_scroll" style="background: white;">
             <div class="tw-my-10 overview" id="Overview">
               <p class="subitle2 tw-pl-10">
                 Use your existing security camera infrastructure to enable PPE Compliance at your facility
@@ -194,7 +194,7 @@
         <div class="tw-w-full md:tw-w-1/4 lg:tw-w-1/3 xl:tw-w-1/4 tw-pl-2 tw-relative">
           <div class="right-section tw-h-screen tw-overflow-y-auto tw-fixed">
             <div class="tw-my-4">
-              <h3 class="tw-text-md tw-text-left">You may also need</h3>
+              <h4 class="tw-text-md tw-text-left">You may also need</h4>
             </div>
             <div
               v-for="n in 8"
@@ -207,7 +207,7 @@
                 />
               </div>
               <div>
-                <h3 class="tw-text-md">{{ scenario.name }}</h3>
+                <h3 class="tw-text-md" style="font-size: 15px;">{{ scenario.name }}</h3>
                 <p class="tw-text-sm">Detect face masks for preventing the spread of COVID-19</p>
               </div>
             </div>
@@ -217,13 +217,13 @@
     </div>
 
     <div v-if="showForm" class="tw-shadow tw-rounded-mg tw-bg-white form">
-      <div class="tw-mx-20">
-        <h3 class="text-xl tw-text-center tw-py-8">{{ indexForm ? 'Select Camera' : 'Terms & Conditions' }}</h3>
+      <div class="tw-mx-15">
+        <h3 class="text-xl tw-text-center tw-py-8" style="margin-top: 50px;">{{ indexForm ? 'Select Camera' : 'Terms & Conditions' }}</h3>
 
         <div class="stepper-card-bg-white">
-          <div class="scroll-bg-gray tw-my-30">
+          <div class="scroll-bg-gray tw-my-30 scroll_design" style="background: transparent;" > 
             <div v-if="!indexForm">
-              <p class="tw-my-10">
+              <p style="text-align: justify; font-size: 15px; ">  
                 Lorem ipsum dolor sit amet consectetur. A id condimentum nibh eu amet nisi ornare. Sit eu diam proin
                 maecenas. Mattis eget eu etiam urna purus nibh ornare. Lacus eu volutpat vel ligula bibendum suspendisse
                 arcu quis. Lorem ipsum dolor sit amet consectetur. A id condimentum nibh eu amet nisi ornare. Sit eu
@@ -236,7 +236,7 @@
                 condimentum nibh eu amet nisi ornare. Sit eu diam proin maecenas. Mattis eget eu etiam urna purus nibh
                 ornare. Lacus eu volutpat vel ligula bibendum suspendisse arcu quis.
               </p>
-              <p class="tw-my-10">
+              <p class="tw-my-8" style="text-align: justify; font-size: 15px;">
                 Lorem ipsum dolor sit amet consectetur. A id condimentum nibh eu amet nisi ornare. Sit eu diam proin
                 maecenas. Mattis eget eu etiam urna purus nibh ornare. Lacus eu volutpat vel ligula bibendum suspendisse
                 arcu quis. Lorem ipsum dolor sit amet consectetur. A id condimentum nibh eu amet nisi ornare. Sit eu
@@ -249,13 +249,13 @@
                 condimentum nibh eu amet nisi ornare. Sit eu diam proin maecenas. Mattis eget eu etiam urna purus nibh
                 ornare. Lacus eu volutpat vel ligula bibendum suspendisse arcu quis.
               </p>
-              <p class="tw-my-10">
+              <p class="tw-my-8" style="text-align: justify; font-size: 15px;">
                 Lorem ipsum dolor sit amet consectetur. A id condimentum nibh eu amet nisi ornare. Sit eu diam proin
                 maecenas. Mattis eget eu etiam urna purus nibh ornare. Lacus eu volutpat vel ligula bibendum suspendisse
                 arcu quis. Lorem ipsum dolor sit amet consectetur. A id condimentum nibh eu amet nisi ornare. Sit eu
                 diam proin maecenas. Mattis eget eu etiam urna purus.
               </p>
-              <p class="tw-my-10">
+              <p class="tw-my-8" style="text-align: justify; font-size: 15px;">
                 Lorem ipsum dolor sit amet consectetur. A id condimentum nibh eu amet nisi ornare. Sit eu diam proin
                 maecenas. Mattis eget eu etiam urna purus nibh ornare. Lacus eu volutpat vel ligula bibendum suspendisse
                 arcu quis. Lorem ipsum dolor sit amet consectetur. A id condimentum nibh eu amet nisi ornare. Sit eu
@@ -279,7 +279,8 @@
           </div>
         </div>
       </div>
-      <div class="d-flex tw-justify-center tw-mt-8">
+      <div class="d-flex tw-justify-center tw-mt-15" style="height: 100px; align-items: center;">
+        <v-btn class="tw-font-semibold" size="x-large" @click="showForm = false"  style="margin-right: 10px; color: gray;">Decline</v-btn>
         <v-btn
           v-if="!indexForm"
           size="x-large"
@@ -536,5 +537,36 @@ export default {
 }
 .camera-img {
   width: 100%;
+}
+
+.scroll_scroll::-webkit-scrollbar {
+  overflow: hidden;
+}
+
+.scroll_design::-webkit-scrollbar {
+  width: 10px;
+  background-color: #f5f5f5;
+}
+.scroll_design::-webkit-scrollbar-thumb {
+  background-color: #888;
+}
+
+.scroll_design::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+/* Set scrollbar track color */
+.scroll_design::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+/* Set scrollbar corner radius */
+.scroll_design::-webkit-scrollbar-corner {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+.btn {
+  margin-bottom: 20px;
+  padding: 10px;
 }
 </style>
